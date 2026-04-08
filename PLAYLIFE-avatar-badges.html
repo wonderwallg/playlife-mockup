@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:#080808;display:flex;justify-content:center;gap:20px;padding:20px;flex-wrap:wrap;min-height:100vh}
+.phone{width:375px;height:812px;background:#111;border-radius:40px;border:3px solid #222;overflow:hidden;position:relative;flex-shrink:0}
+.phone-label{color:#666;font-size:11px;text-align:center;margin-bottom:6px;letter-spacing:1px;text-transform:uppercase}
+.screen{height:100%;overflow-y:auto;scrollbar-width:none;padding-bottom:80px}
+.screen::-webkit-scrollbar{display:none}
+:root{--bg:#111;--card:#1a1a1a;--g:#2DB87A;--gs:#1a3d2e;--gd:#D4A853;--gds:rgba(212,168,83,.12);--pk:#E86B8A;--pks:rgba(232,107,138,.12);--bl:#5B9EF4;--bls:rgba(91,158,244,.12);--pp:#9B7AFF;--pps:rgba(155,122,255,.12);--t:#f0f0f0;--t2:#999;--t3:#555;--bd:#2a2a2a}
+.lang-toggle{position:fixed;top:12px;right:12px;z-index:100;display:flex;background:#222;border-radius:20px;overflow:hidden;border:1px solid #333}
+.lang-btn{padding:6px 14px;font-size:11px;font-weight:600;cursor:pointer;color:#999;border:none;background:transparent;transition:all .2s}
+.lang-btn.active{background:var(--g);color:#fff}
+.hdr{display:flex;justify-content:space-between;align-items:center;padding:52px 20px 10px}
+.logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--t);letter-spacing:-.5px}
+.logo span{color:var(--g)}
+.hdr-badge{font-size:10px;font-weight:600;color:var(--g);border:1px solid var(--g);padding:3px 10px;border-radius:20px;letter-spacing:1px;margin-left:8px}
+.sh{display:flex;justify-content:space-between;align-items:center;padding:14px 20px 6px}
+.stt{font-size:15px;font-weight:600;color:var(--t)}
+.stl{font-size:11px;color:var(--g);cursor:pointer}
+.tb{position:absolute;bottom:0;left:0;right:0;height:76px;background:rgba(17,17,17,.95);backdrop-filter:blur(20px);border-top:1px solid var(--bd);display:flex;align-items:flex-start;padding-top:8px}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:4px 0}
+.ti{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--t3);transition:all .2s}
+.tab.on .ti{background:var(--g);color:#fff}
+.tt{font-size:8px;color:var(--t3);font-weight:500}
+.tab.on .tt{color:var(--g)}
+
+/* Avatar display */
+.avatar-hero{margin:6px 16px;background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);border-radius:20px;padding:24px;text-align:center;position:relative;overflow:hidden}
+.avatar-hero::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(45,184,122,.08) 0%,transparent 70%)}
+.avatar-circle{width:100px;height:100px;border-radius:50%;margin:0 auto 12px;position:relative;display:flex;align-items:center;justify-content:center}
+.avatar-ring{position:absolute;inset:-4px;border-radius:50%;border:3px solid transparent;border-top-color:var(--g);border-right-color:var(--g);animation:spin 3s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.avatar-inner{width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,var(--g),#1a8a55);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:700;color:#fff;position:relative;z-index:1}
+.avatar-lv{position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);background:var(--gd);color:#fff;font-size:11px;font-weight:700;padding:2px 12px;border-radius:20px;z-index:2}
+.avatar-name{font-size:20px;font-weight:700;color:#fff;margin-bottom:2px}
+.avatar-title{font-size:12px;color:var(--gd);margin-bottom:16px}
+
+/* Stats bar */
+.stat-bars{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.stat-row{display:flex;align-items:center;gap:8px}
+.stat-icon{font-size:14px;width:24px;text-align:center}
+.stat-name{font-size:11px;color:rgba(255,255,255,.5);width:70px}
+.stat-track{flex:1;height:8px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden;position:relative}
+.stat-fill{height:100%;border-radius:4px;transition:width 1s ease}
+.stat-fill.power{background:linear-gradient(90deg,#E24B4A,#F09595)}
+.stat-fill.tech{background:linear-gradient(90deg,#5B9EF4,#85B7EB)}
+.stat-fill.mental{background:linear-gradient(90deg,#9B7AFF,#CECBF6)}
+.stat-val{font-size:12px;font-weight:700;color:#fff;width:28px;text-align:right}
+
+/* Growth chart */
+.growth-card{margin:8px 16px;background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px}
+.growth-title{font-size:13px;font-weight:600;color:var(--t);margin-bottom:12px}
+.growth-chart{display:flex;align-items:flex-end;gap:4px;height:80px;padding-bottom:20px;position:relative}
+.growth-bar{flex:1;background:var(--gs);border-radius:3px 3px 0 0;position:relative;transition:height .5s ease;min-height:4px}
+.growth-bar.current{background:var(--g)}
+.growth-label{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:8px;color:var(--t3);white-space:nowrap}
+.growth-val{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:9px;font-weight:600;color:var(--t2)}
+.growth-legend{display:flex;justify-content:center;gap:16px;margin-top:24px}
+.growth-leg-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--t3)}
+.growth-leg-dot{width:8px;height:8px;border-radius:2px}
+
+/* Next level */
+.next-lv{margin:8px 16px;background:linear-gradient(135deg,var(--gs),#0f2a1c);border:1px solid rgba(45,184,122,.2);border-radius:16px;padding:14px 16px}
+.next-lv-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.next-lv-label{font-size:12px;color:var(--g);font-weight:600}
+.next-lv-target{font-size:11px;color:var(--t3)}
+.next-lv-track{height:10px;background:rgba(255,255,255,.06);border-radius:5px;overflow:hidden;margin-bottom:6px}
+.next-lv-fill{height:100%;background:linear-gradient(90deg,var(--g),#5DCAA5);border-radius:5px;transition:width 1s ease}
+.next-lv-info{font-size:10px;color:var(--t3)}
+.next-lv-info span{color:var(--g);font-weight:600}
+
+/* Badge system */
+.badge-section{margin:4px 16px 8px}
+.badge-cat{font-size:12px;font-weight:600;color:var(--t2);margin:12px 0 8px;display:flex;align-items:center;gap:6px}
+.badge-cat-icon{font-size:14px}
+.badge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.badge-item{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:10px 4px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.badge-item:hover{border-color:#444;transform:translateY(-2px)}
+.badge-item.earned{border-color:rgba(212,168,83,.3)}
+.badge-item.locked{opacity:.4}
+.badge-icon{width:40px;height:40px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.badge-icon.earned{background:var(--gds)}
+.badge-icon.locked{background:#1a1a1a}
+.badge-name{font-size:9px;color:var(--t2);line-height:1.2}
+.badge-name.locked{color:var(--t3)}
+.badge-rarity{position:absolute;top:4px;right:4px;font-size:7px;padding:1px 5px;border-radius:8px;font-weight:600}
+.badge-rarity.common{background:#2a2a2a;color:var(--t3)}
+.badge-rarity.rare{background:var(--bls);color:var(--bl)}
+.badge-rarity.epic{background:var(--pps);color:var(--pp)}
+.badge-rarity.legend{background:var(--gds);color:var(--gd)}
+.badge-check{position:absolute;top:4px;left:4px;font-size:10px;color:var(--g)}
+.badge-pct{font-size:8px;color:var(--t3);margin-top:2px}
+
+/* Badge detail modal */
+.badge-detail{margin:8px 16px;background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px;text-align:center}
+.badge-detail-icon{width:60px;height:60px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:28px;background:var(--gds)}
+.badge-detail-name{font-size:16px;font-weight:700;color:var(--t);margin-bottom:2px}
+.badge-detail-desc{font-size:12px;color:var(--t2);margin-bottom:8px}
+.badge-detail-date{font-size:10px;color:var(--t3)}
+.badge-detail-holders{font-size:11px;color:var(--gd);margin-top:8px;font-weight:600}
+
+/* Completion tracker */
+.completion{margin:8px 16px;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px 16px}
+.completion-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.completion-label{font-size:13px;font-weight:600;color:var(--t)}
+.completion-pct{font-size:14px;font-weight:700;color:var(--gd)}
+.completion-track{height:8px;background:#2a2a2a;border-radius:4px;overflow:hidden;margin-bottom:6px}
+.completion-fill{height:100%;background:linear-gradient(90deg,var(--gd),#EF9F27);border-radius:4px}
+.completion-sub{font-size:10px;color:var(--t3)}
+.completion-sub span{color:var(--gd);font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="lang-toggle">
+  <button class="lang-btn active" onclick="setLang('ja')">JA</button>
+  <button class="lang-btn" onclick="setLang('en')">EN</button>
+</div>
+
+<!-- ========== AVATAR GROWTH ========== -->
+<div>
+<div class="phone-label">Avatar growth</div>
+<div class="phone"><div class="screen">
+<div class="hdr">
+  <div style="display:flex;align-items:center"><div class="logo">PLAY<span>LIFE</span></div><div class="hdr-badge">GOLF</div></div>
+</div>
+
+<div class="avatar-hero">
+  <div class="avatar-circle">
+    <div class="avatar-ring"></div>
+    <div class="avatar-inner">K</div>
+    <div class="avatar-lv">Lv.12</div>
+  </div>
+  <div class="avatar-name">Ken</div>
+  <div class="avatar-title">&#9971; <span class="i18n" data-ja="アマチュアゴルファー" data-en="Amateur golfer">アマチュアゴルファー</span></div>
+  
+  <div class="stat-bars">
+    <div class="stat-row">
+      <div class="stat-icon">&#128170;</div>
+      <div class="stat-name"><span class="i18n" data-ja="パワー" data-en="Power">パワー</span></div>
+      <div class="stat-track"><div class="stat-fill power" style="width:72%"></div></div>
+      <div class="stat-val">72</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-icon">&#127919;</div>
+      <div class="stat-name"><span class="i18n" data-ja="テクニック" data-en="Technique">テクニック</span></div>
+      <div class="stat-track"><div class="stat-fill tech" style="width:58%"></div></div>
+      <div class="stat-val">58</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-icon">&#129504;</div>
+      <div class="stat-name"><span class="i18n" data-ja="メンタル" data-en="Mental">メンタル</span></div>
+      <div class="stat-track"><div class="stat-fill mental" style="width:65%"></div></div>
+      <div class="stat-val">65</div>
+    </div>
+  </div>
+</div>
+
+<!-- Next Level -->
+<div class="next-lv">
+  <div class="next-lv-top">
+    <div class="next-lv-label"><span class="i18n" data-ja="次のレベルまで" data-en="Next level">次のレベルまで</span></div>
+    <div class="next-lv-target">Lv.12 → Lv.13</div>
+  </div>
+  <div class="next-lv-track"><div class="next-lv-fill" style="width:65%"></div></div>
+  <div class="next-lv-info"><span class="i18n" data-ja="あと" data-en="">あと</span><span>2<span class="i18n" data-ja="ラウンド" data-en=" rounds">ラウンド</span></span><span class="i18n" data-ja="でレベルアップ" data-en=" to level up">でレベルアップ</span></div>
+</div>
+
+<!-- Growth Chart -->
+<div class="growth-card">
+  <div class="growth-title"><span class="i18n" data-ja="アバター成長履歴" data-en="Avatar growth history">アバター成長履歴</span></div>
+  <div class="growth-chart">
+    <div class="growth-bar" style="height:15%"><div class="growth-label">Oct</div><div class="growth-val">3</div></div>
+    <div class="growth-bar" style="height:25%"><div class="growth-label">Nov</div><div class="growth-val">5</div></div>
+    <div class="growth-bar" style="height:20%"><div class="growth-label">Dec</div><div class="growth-val">4</div></div>
+    <div class="growth-bar" style="height:35%"><div class="growth-label">Jan</div><div class="growth-val">7</div></div>
+    <div class="growth-bar" style="height:30%"><div class="growth-label">Feb</div><div class="growth-val">6</div></div>
+    <div class="growth-bar" style="height:45%"><div class="growth-label">Mar</div><div class="growth-val">9</div></div>
+    <div class="growth-bar current" style="height:55%"><div class="growth-label">Apr</div><div class="growth-val">11</div></div>
+  </div>
+  <div class="growth-legend">
+    <div class="growth-leg-item"><div class="growth-leg-dot" style="background:var(--gs)"></div><span class="i18n" data-ja="過去" data-en="Past">過去</span></div>
+    <div class="growth-leg-item"><div class="growth-leg-dot" style="background:var(--g)"></div><span class="i18n" data-ja="今月" data-en="Current">今月</span></div>
+  </div>
+</div>
+
+<!-- Badge earned notification -->
+<div class="badge-detail">
+  <div style="font-size:10px;color:var(--g);margin-bottom:6px;font-weight:600">&#127881; <span class="i18n" data-ja="新しいバッジ獲得！" data-en="New badge earned!">新しいバッジ獲得！</span></div>
+  <div class="badge-detail-icon">&#128293;</div>
+  <div class="badge-detail-name"><span class="i18n" data-ja="5連続ラウンド" data-en="5-round streak">5連続ラウンド</span></div>
+  <div class="badge-detail-desc"><span class="i18n" data-ja="5ヶ月連続でラウンドを記録" data-en="Recorded rounds for 5 consecutive months">5ヶ月連続でラウンドを記録</span></div>
+  <div class="badge-detail-date">2026.04.06</div>
+  <div class="badge-detail-holders"><span class="i18n" data-ja="全ユーザーの12%が取得" data-en="Earned by 12% of users">全ユーザーの12%が取得</span></div>
+</div>
+
+</div>
+<div class="tb">
+  <div class="tab"><div class="ti">&#127968;</div><div class="tt">Home</div></div>
+  <div class="tab"><div class="ti">&#9971;</div><div class="tt">Rounds</div></div>
+  <div class="tab"><div class="ti">&#127873;</div><div class="tt">Gift</div></div>
+  <div class="tab"><div class="ti">&#9829;</div><div class="tt">Vote</div></div>
+  <div class="tab on"><div class="ti">&#128100;</div><div class="tt">Profile</div></div>
+</div>
+</div></div>
+
+<!-- ========== BADGE COLLECTION ========== -->
+<div>
+<div class="phone-label">Badge collection</div>
+<div class="phone"><div class="screen">
+<div class="hdr">
+  <div style="display:flex;align-items:center"><div class="logo">PLAY<span>LIFE</span></div></div>
+  <div style="font-size:13px;color:var(--gd);font-weight:600">&#127942; 8/24</div>
+</div>
+
+<!-- Completion tracker -->
+<div class="completion">
+  <div class="completion-top">
+    <div class="completion-label"><span class="i18n" data-ja="バッジコレクション" data-en="Badge collection">バッジコレクション</span></div>
+    <div class="completion-pct">33%</div>
+  </div>
+  <div class="completion-track"><div class="completion-fill" style="width:33%"></div></div>
+  <div class="completion-sub"><span>8</span> / 24 <span class="i18n" data-ja="バッジ獲得済み" data-en="badges earned">バッジ獲得済み</span></div>
+</div>
+
+<!-- Golf badges -->
+<div class="badge-section">
+<div class="badge-cat"><div class="badge-cat-icon">&#9971;</div> <span class="i18n" data-ja="ゴルフ実績" data-en="Golf achievements">ゴルフ実績</span></div>
+<div class="badge-grid">
+  <div class="badge-item earned"><div class="badge-check">&#10003;</div><div class="badge-icon earned">&#127941;</div><div class="badge-name"><span class="i18n" data-ja="初ラウンド" data-en="1st round">初ラウンド</span></div><div class="badge-pct">89%</div></div>
+  <div class="badge-item earned"><div class="badge-check">&#10003;</div><div class="badge-icon earned">&#128200;</div><div class="badge-name"><span class="i18n" data-ja="110切り" data-en="Break 110">110切り</span></div><div class="badge-pct">72%</div></div>
+  <div class="badge-item earned"><div class="badge-check">&#10003;</div><div class="badge-rarity rare">Rare</div><div class="badge-icon earned">&#9917;</div><div class="badge-name"><span class="i18n" data-ja="100切り" data-en="Break 100">100切り</span></div><div class="badge-pct">34%</div></div>
+  <div class="badge-item locked"><div class="badge-rarity epic">Epic</div><div class="badge-icon locked">&#128142;</div><div class="badge-name locked"><span class="i18n" data-ja="90切り" data-en="Break 90">90切り</span></div><div class="badge-pct">8%</div></div>
+  <div class="badge-item locked"><div class="badge-rarity legend">Legend</div><div class="badge-icon locked">&#128081;</div><div class="badge-name locked"><span class="i18n" data-ja="80切り" data-en="Break 80">80切り</span></div><div class="badge-pct">2%</div></div>
+  <div class="badge-item earned"><div class="badge-check">&#10003;</div><div class="badge-icon earned">&#128293;</div><div class="badge-name"><span class="i18n" data-ja="5連続" data-en="5 streak">5連続</span></div><div class="badge-pct">12%</div></div>
+  <div class="badge-item locked"><div class="badge-rarity epic">Epic</div><div class="badge-icon locked">&#127775;</div><div class="badge-name locked"><span class="i18n" data-ja="10連続" data-en="10 streak">10連続</span></div><div class="badge-pct">3%</div></div>
+  <div class="badge-item locked"><div class="badge-rarity legend">Legend</div><div class="badge-icon locked">&#127760;</div><div class="badge-name locked"><span class="i18n" data-ja="10コース制覇" data-en="10 courses">10コース制覇</span></div><div class="badge-pct">5%</div></div>
+</div>
+
+<!-- Social badges -->
+<div class="badge-cat"><div class="badge-cat-icon">&#129309;</div> <span class="i18n" data-ja="ソーシャル" data-en="Social">ソーシャル</span></div>
+<div class="badge-grid">
+  <div class="badge-item earned"><div class="badge-check">&#10003;</div><div class="badge-icon earned">&#127873;</div><div class="badge-name"><span class="i18n" data-ja="初ギフト&#10;もらう" data-en="1st gift&#10;received">初ギフト&#10;もらう</span></div><div class="badge-pct">45%</div></div>
+  <div class="badge-item earned"><div class="badge-check">&#10003;</div><div class="badge-icon earned">&#128147;</div><div class="badge-name"><span class="i18n" data-ja="初ギフト&#10;あげる" data-en="1st gift&#10;sent">初ギフト&#10;あげる</span></div><div class="badge-pct">38%</div></div>
+  <div class="badge-item locked"><div class="badge-rarity rare">Rare</div><div class="badge-icon locked">&#127873;</div><div class="badge-name locked"><span class="i18n" data-ja="100ギフト&#10;受取" data-en="100 gifts&#10;received">100ギフト&#10;受取</span></div><div class="badge-pct">4%</div></div>
+  <div class="badge-item earned"><div class="badge-check">&#10003;</div><div class="badge-icon earned">&#128101;</div><div class="badge-name"><span class="i18n" data-ja="フォロワー&#10;100人" data-en="100&#10;followers">フォロワー&#10;100人</span></div><div class="badge-pct">22%</div></div>
+  <div class="badge-item locked"><div class="badge-rarity epic">Epic</div><div class="badge-icon locked">&#128101;</div><div class="badge-name locked"><span class="i18n" data-ja="フォロワー&#10;1,000人" data-en="1,000&#10;followers">フォロワー&#10;1,000人</span></div><div class="badge-pct">3%</div></div>
+  <div class="badge-item locked"><div class="badge-rarity legend">Legend</div><div class="badge-icon locked">&#128101;</div><div class="badge-name locked"><span class="i18n" data-ja="フォロワー&#10;10,000人" data-en="10,000&#10;followers">フォロワー&#10;10,000人</span></div><div class="badge-pct">0.1%</div></div>
+  <div class="badge-item earned"><div class="badge-check">&#10003;</div><div class="badge-icon earned">&#9829;</div><div class="badge-name"><span class="i18n" data-ja="初VOTE&#10;作成" data-en="1st vote&#10;created">初VOTE&#10;作成</span></div><div class="badge-pct">35%</div></div>
+  <div class="badge-item locked"><div class="badge-rarity rare">Rare</div><div class="badge-icon locked">&#127919;</div><div class="badge-name locked"><span class="i18n" data-ja="VOTE的中&#10;10回" data-en="10 correct&#10;votes">VOTE的中&#10;10回</span></div><div class="badge-pct">9%</div></div>
+</div>
+
+<!-- Trust badges -->
+<div class="badge-cat"><div class="badge-cat-icon">&#9989;</div> Trust</div>
+<div class="badge-grid">
+  <div class="badge-item earned"><div class="badge-check">&#10003;</div><div class="badge-icon earned">&#128205;</div><div class="badge-name"><span class="i18n" data-ja="初GPS&#10;証明" data-en="1st GPS&#10;verify">初GPS&#10;証明</span></div><div class="badge-pct">52%</div></div>
+  <div class="badge-item locked"><div class="badge-rarity rare">Rare</div><div class="badge-icon locked">&#9989;</div><div class="badge-name locked">Trust&#10;80%</div><div class="badge-pct">18%</div></div>
+  <div class="badge-item locked"><div class="badge-rarity epic">Epic</div><div class="badge-icon locked">&#128272;</div><div class="badge-name locked">Trust&#10;100%</div><div class="badge-pct">5%</div></div>
+  <div class="badge-item locked"><div class="badge-rarity rare">Rare</div><div class="badge-icon locked">&#129309;</div><div class="badge-name locked"><span class="i18n" data-ja="友人承認&#10;5回" data-en="5 friend&#10;verifies">友人承認&#10;5回</span></div><div class="badge-pct">7%</div></div>
+</div>
+
+<!-- Special badges -->
+<div class="badge-cat"><div class="badge-cat-icon">&#10024;</div> <span class="i18n" data-ja="スペシャル" data-en="Special">スペシャル</span></div>
+<div class="badge-grid">
+  <div class="badge-item locked"><div class="badge-rarity legend">Legend</div><div class="badge-icon locked">&#127775;</div><div class="badge-name locked"><span class="i18n" data-ja="月間MVP" data-en="Monthly&#10;MVP">月間MVP</span></div><div class="badge-pct">0.5%</div></div>
+  <div class="badge-item locked"><div class="badge-rarity legend">Legend</div><div class="badge-icon locked">&#128081;</div><div class="badge-name locked"><span class="i18n" data-ja="トーナメント&#10;優勝" data-en="Tournament&#10;winner">トーナメント&#10;優勝</span></div><div class="badge-pct">0.2%</div></div>
+  <div class="badge-item locked"><div class="badge-rarity epic">Epic</div><div class="badge-icon locked">&#127873;</div><div class="badge-name locked"><span class="i18n" data-ja="ギフト王&#10;Top10" data-en="Gift king&#10;Top 10">ギフト王&#10;Top10</span></div><div class="badge-pct">1%</div></div>
+  <div class="badge-item locked"><div class="badge-rarity legend">Legend</div><div class="badge-icon locked">&#128142;</div><div class="badge-name locked"><span class="i18n" data-ja="全バッジ&#10;コンプ" data-en="All badges&#10;complete">全バッジ&#10;コンプ</span></div><div class="badge-pct">0%</div></div>
+</div>
+</div>
+
+</div>
+<div class="tb">
+  <div class="tab"><div class="ti">&#127968;</div><div class="tt">Home</div></div>
+  <div class="tab"><div class="ti">&#9971;</div><div class="tt">Rounds</div></div>
+  <div class="tab"><div class="ti">&#127873;</div><div class="tt">Gift</div></div>
+  <div class="tab"><div class="ti">&#9829;</div><div class="tt">Vote</div></div>
+  <div class="tab on"><div class="ti">&#128100;</div><div class="tt">Profile</div></div>
+</div>
+</div></div>
+
+<script>
+function setLang(lang) {
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent.trim() === lang.toUpperCase()));
+  document.querySelectorAll('.i18n').forEach(el => {
+    const text = el.getAttribute('data-' + lang);
+    if (text) el.innerHTML = text;
+  });
+}
+</script>
+</body>
+</html>

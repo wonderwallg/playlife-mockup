@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:#080808;display:flex;justify-content:center;gap:20px;padding:20px;flex-wrap:wrap;min-height:100vh}
+.phone{width:375px;height:812px;background:#111;border-radius:40px;border:3px solid #222;overflow:hidden;position:relative;flex-shrink:0}
+.phone-label{color:#666;font-size:11px;text-align:center;margin-bottom:6px;letter-spacing:1px;text-transform:uppercase}
+.screen{height:100%;overflow-y:auto;scrollbar-width:none;padding-bottom:80px}
+.screen::-webkit-scrollbar{display:none}
+:root{--bg:#111;--card:#1a1a1a;--ch:#222;--g:#2DB87A;--gs:#1a3d2e;--gd:#D4A853;--gds:rgba(212,168,83,.12);--pk:#E86B8A;--pks:rgba(232,107,138,.12);--bl:#5B9EF4;--bls:rgba(91,158,244,.12);--t:#f0f0f0;--t2:#999;--t3:#555;--bd:#2a2a2a}
+.lang-toggle{position:fixed;top:12px;right:12px;z-index:100;display:flex;background:#222;border-radius:20px;overflow:hidden;border:1px solid #333}
+.lang-btn{padding:6px 14px;font-size:11px;font-weight:600;cursor:pointer;color:#999;border:none;background:transparent;transition:all .2s}
+.lang-btn.active{background:var(--g);color:#fff}
+
+/* Header */
+.hdr{display:flex;justify-content:space-between;align-items:center;padding:52px 20px 10px}
+.logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--t);letter-spacing:-.5px}
+.logo span{color:var(--g)}
+.hdr-badge{font-size:10px;font-weight:600;color:var(--g);border:1px solid var(--g);padding:3px 10px;border-radius:20px;letter-spacing:1px;margin-left:8px}
+.hdr-icons{display:flex;gap:10px}
+.ic{width:34px;height:34px;border-radius:50%;background:var(--card);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;color:var(--t2);font-size:13px;cursor:pointer}
+
+/* Profile hero */
+.hero{margin:6px 16px;background:linear-gradient(135deg,#1e4d35,#163828,#0f2a1c);border-radius:20px;padding:18px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:rgba(45,184,122,.08)}
+.hero-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.av{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;border:2px solid rgba(255,255,255,.2)}
+.av.f{background:linear-gradient(135deg,#E86B8A,#c74b6a)}
+.av.m{background:linear-gradient(135deg,var(--g),#1a8a55)}
+.av.b{background:linear-gradient(135deg,var(--bl),#3b7ed4)}
+.av.gold{background:linear-gradient(135deg,var(--gd),#b48833)}
+.nm{font-size:16px;font-weight:600;color:#fff}
+.sub{font-size:11px;color:rgba(255,255,255,.45);margin-top:2px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.st{text-align:center}
+.sn{font-size:17px;font-weight:700;color:#fff}
+.sn.g{color:var(--g)}.sn.gd{color:var(--gd)}.sn.pk{color:var(--pk)}.sn.bl{color:var(--bl)}
+.sl{font-size:9px;color:rgba(255,255,255,.35);margin-top:1px;text-transform:uppercase;letter-spacing:.5px}
+
+/* Flow */
+.flow{margin:6px 16px 8px;background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between}
+.fi{display:flex;flex-direction:column;align-items:center;gap:3px}
+.fd{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;background:var(--g);color:#fff}
+.ft{font-size:8px;color:var(--t3);text-align:center;line-height:1.2}
+.fa{color:var(--t3);font-size:11px;margin-bottom:12px}
+
+/* Actions */
+.acts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:8px 16px}
+.act{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px 4px;text-align:center;cursor:pointer;transition:all .2s}
+.act:hover{background:var(--ch);border-color:#333}
+.ai{width:34px;height:34px;border-radius:10px;margin:0 auto 5px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.ai.gb{background:var(--gs);color:var(--g)}
+.ai.bb{background:var(--bls);color:var(--bl)}
+.ai.pb{background:var(--pks);color:var(--pk)}
+.ai.gdb{background:var(--gds);color:var(--gd)}
+.al{font-size:10px;color:var(--t2);font-weight:500}
+
+/* Section */
+.sh{display:flex;justify-content:space-between;align-items:center;padding:14px 20px 6px}
+.stt{font-size:15px;font-weight:600;color:var(--t)}
+.stl{font-size:11px;color:var(--g);cursor:pointer}
+
+/* Gift feed */
+.gf{padding:4px 16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin-bottom:6px}
+.gf::-webkit-scrollbar{display:none}
+.gi{flex-shrink:0;width:130px;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:10px;text-align:center;cursor:pointer;transition:border-color .2s}
+.gi:hover{border-color:var(--pk)}
+.ga{width:38px;height:38px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff}
+.gn{font-size:11px;font-weight:600;color:var(--t)}
+.gac{font-size:9px;color:var(--pk);margin-top:1px}
+.gam{font-size:13px;font-weight:700;color:var(--gd);margin-top:4px}
+
+/* Vote card */
+.vc{margin:4px 16px 8px;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px 14px;cursor:pointer;transition:border-color .2s}
+.vc:hover{border-color:#444}
+.vt{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.vq{font-size:13px;font-weight:600;color:var(--t);flex:1;line-height:1.3}
+.vp{font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;margin-left:8px;white-space:nowrap}
+.vp.gd{background:var(--gds);color:var(--gd)}
+.vp.pk{background:var(--pks);color:var(--pk)}
+.vb{margin-bottom:6px}
+.vr{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.vrl{font-size:11px;color:var(--t2);width:26px}
+.vbt{flex:1;height:5px;background:#2a2a2a;border-radius:3px;overflow:hidden}
+.vbf{height:100%;border-radius:3px}
+.vbf.y{background:var(--g)}.vbf.n{background:var(--bl)}
+.vpc{font-size:11px;font-weight:600;color:var(--t2);width:30px;text-align:right}
+.vm{display:flex;justify-content:space-between;align-items:center}
+.vml{font-size:10px;color:var(--t3)}
+.vmb{font-size:10px;font-weight:600;color:var(--g);background:var(--gs);padding:4px 12px;border-radius:20px;cursor:pointer}
+
+/* Round card */
+.rc{margin:4px 16px 6px;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color .2s}
+.rc:hover{border-color:#444}
+.ra{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.ri{flex:1}
+.rn{font-size:12px;font-weight:600;color:var(--t)}
+.rco{font-size:10px;color:var(--t3);margin-top:1px}
+.rtr{font-size:9px;color:var(--g);margin-top:1px}
+.rr{text-align:right}
+.rs{font-size:20px;font-weight:700;color:var(--t)}
+.rd{font-size:10px;color:var(--t3)}
+.rp{font-size:10px;color:var(--g);margin-top:1px}
+.rbst{font-size:8px;font-weight:600;color:var(--gd);background:var(--gds);padding:2px 5px;border-radius:4px;display:inline-block;margin-top:1px}
+
+/* Tab bar */
+.tb{position:absolute;bottom:0;left:0;right:0;height:76px;background:rgba(17,17,17,.95);backdrop-filter:blur(20px);border-top:1px solid var(--bd);display:flex;align-items:flex-start;padding-top:8px}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:4px 0}
+.ti{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--t3);transition:all .2s}
+.tab.on .ti{background:var(--g);color:#fff}
+.tt{font-size:8px;color:var(--t3);font-weight:500}
+.tab.on .tt{color:var(--g)}
+
+/* FAB */
+.fab{position:absolute;bottom:84px;right:16px;width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--g),#1a8a55);display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;cursor:pointer;box-shadow:0 4px 20px rgba(45,184,122,.3);transition:transform .2s;z-index:10}
+.fab:hover{transform:scale(1.08)}
+
+/* Filter pills */
+.fp{display:flex;gap:6px;padding:6px 16px}
+.pill{font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid var(--bd);color:var(--t2);cursor:pointer;background:var(--card)}
+.pill.on{background:var(--g);border-color:var(--g);color:#fff}
+
+/* Gift tab */
+.gth{margin:6px 16px;background:linear-gradient(135deg,#3d1f2e,#2d1520,#1a0d14);border-radius:20px;padding:18px;text-align:center}
+.gtt{font-family:'Playfair Display',serif;font-size:18px;color:var(--pk);margin-bottom:3px}
+.gts{font-size:11px;color:rgba(232,107,138,.45)}
+.gta{font-size:26px;font-weight:700;color:#fff;margin-top:10px}
+.gtl{font-size:10px;color:var(--t3);margin-top:2px}
+.gli{margin:4px 16px 5px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:8px}
+.glr{font-size:13px;font-weight:700;color:var(--t3);width:18px;text-align:center}
+.glr.top{color:var(--gd)}
+.glni{flex:1}
+.glnn{font-size:12px;font-weight:600;color:var(--t)}
+.glnf{font-size:9px;color:var(--t3)}
+.gla{font-size:13px;font-weight:700;color:var(--pk)}
+.glb{font-size:10px;font-weight:600;color:var(--pk);background:var(--pks);padding:4px 10px;border-radius:20px;cursor:pointer}
+
+/* Send gift */
+.sgb{margin:12px 16px;padding:14px;background:var(--card);border:1px solid var(--bd);border-radius:14px;text-align:center}
+.sgbt{font-size:13px;font-weight:600;color:var(--t);margin-bottom:3px}
+.sgbs{font-size:11px;color:var(--t3);margin-bottom:10px}
+.sgbg{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.sgbi{background:var(--gds);color:var(--gd);padding:7px 14px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;transition:transform .15s}
+.sgbi:hover{transform:scale(1.05)}
+.sgbi.pk{background:var(--pks);color:var(--pk)}
+.sgbi.g{background:var(--gs);color:var(--g)}
+
+/* Profile */
+.ph{margin:6px 16px;background:linear-gradient(135deg,#1e4d35,#163828,#0f2a1c);border-radius:20px;padding:20px;text-align:center}
+.pav{width:64px;height:64px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#fff;border:3px solid rgba(255,255,255,.15)}
+.pnm{font-size:18px;font-weight:600;color:#fff}
+.psb{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px}
+.pst{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:14px}
+.trust-bar{margin:8px 16px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 14px}
+.trust-top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.trust-icon{color:var(--g);font-size:16px}
+.trust-label{font-size:12px;font-weight:600;color:var(--g)}
+.trust-track{height:6px;background:#2a2a2a;border-radius:3px;overflow:hidden}
+.trust-fill{height:100%;background:var(--g);border-radius:3px}
+.trust-sub{font-size:10px;color:var(--t3);margin-top:4px}
+
+/* Achievement */
+.ach{display:flex;gap:10px;padding:4px 16px;overflow-x:auto;scrollbar-width:none}
+.ach::-webkit-scrollbar{display:none}
+.achi{flex-shrink:0;text-align:center;width:70px}
+.achic{width:44px;height:44px;border-radius:50%;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.achic.earned{background:var(--gds);color:var(--gd)}
+.achic.locked{background:#222;color:#444}
+.achl{font-size:9px;color:var(--t3)}
+</style>
+</head>
+<body>
+
+<div class="lang-toggle">
+  <button class="lang-btn active" onclick="setLang('ja')">JA</button>
+  <button class="lang-btn" onclick="setLang('en')">EN</button>
+</div>
+
+<!-- ========== HOME ========== -->
+<div>
+<div class="phone-label">Home</div>
+<div class="phone">
+<div class="screen">
+<div class="hdr">
+  <div style="display:flex;align-items:center"><div class="logo">PLAY<span>LIFE</span></div><div class="hdr-badge">GOLF</div></div>
+  <div class="hdr-icons"><div class="ic">&#x1f514;</div><div class="ic">&#x1f50d;</div></div>
+</div>
+
+<div class="hero">
+  <div class="hero-top">
+    <div class="av f">M</div>
+    <div><div class="nm">Misaki</div><div class="sub">HC 22.1 · <span data-ja="1,240 フォロワー" data-en="1,240 followers" class="i18n">1,240 フォロワー</span></div></div>
+  </div>
+  <div class="stats">
+    <div class="st"><div class="sn g">2,480</div><div class="sl" data-ja="ポイント" data-en="Points"><span class="i18n" data-ja="ポイント" data-en="Points">ポイント</span></div></div>
+    <div class="st"><div class="sn">92</div><div class="sl"><span class="i18n" data-ja="ベスト" data-en="Best">ベスト</span></div></div>
+    <div class="st"><div class="sn gd">80%</div><div class="sl">Trust</div></div>
+    <div class="st"><div class="sn pk">Lv.8</div><div class="sl"><span class="i18n" data-ja="アバター" data-en="Avatar">アバター</span></div></div>
+  </div>
+</div>
+
+<div class="flow">
+  <div class="fi"><div class="fd">&#128247;</div><div class="ft"><span class="i18n" data-ja="スクショ&#10;を貼る" data-en="Score&#10;upload">スクショ&#10;を貼る</span></div></div>
+  <div class="fa">&#8250;</div>
+  <div class="fi"><div class="fd">&#10024;</div><div class="ft"><span class="i18n" data-ja="AIが&#10;認識" data-en="AI&#10;recognize">AIが&#10;認識</span></div></div>
+  <div class="fa">&#8250;</div>
+  <div class="fi"><div class="fd">&#128205;</div><div class="ft"><span class="i18n" data-ja="GPS&#10;で証明" data-en="GPS&#10;verify">GPS&#10;で証明</span></div></div>
+  <div class="fa">&#8250;</div>
+  <div class="fi"><div class="fd">&#11088;</div><div class="ft"><span class="i18n" data-ja="ポイント&#10;GET" data-en="Points&#10;GET">ポイント&#10;GET</span></div></div>
+</div>
+
+<div class="acts">
+  <div class="act"><div class="ai gb">&#128247;</div><div class="al"><span class="i18n" data-ja="スクショ" data-en="Screenshot">スクショ</span></div></div>
+  <div class="act"><div class="ai bb">&#128205;</div><div class="al"><span class="i18n" data-ja="チェックイン" data-en="Check In">チェックイン</span></div></div>
+  <div class="act"><div class="ai pb">&#9829;</div><div class="al">Vote</div></div>
+  <div class="act"><div class="ai gdb">&#127873;</div><div class="al">Gift</div></div>
+</div>
+
+<div class="sh"><div class="stt"><span class="i18n" data-ja="最近のGift" data-en="Recent gifts">最近のGift</span></div><div class="stl"><span class="i18n" data-ja="すべて見る" data-en="See all">すべて見る</span></div></div>
+<div class="gf">
+  <div class="gi"><div class="ga" style="background:linear-gradient(135deg,#E86B8A,#c74b6a)">Y</div><div class="gn">Yui</div><div class="gac"><span class="i18n" data-ja="ギフト受取" data-en="received">ギフト受取</span></div><div class="gam">&#127873; x24</div></div>
+  <div class="gi"><div class="ga" style="background:linear-gradient(135deg,#5B9EF4,#3b7ed4)">K</div><div class="gn">Ken</div><div class="gac"><span class="i18n" data-ja="ギフト受取" data-en="received">ギフト受取</span></div><div class="gam">&#127873; x18</div></div>
+  <div class="gi"><div class="ga" style="background:linear-gradient(135deg,#D4A853,#b48833)">A</div><div class="gn">Aiko</div><div class="gac"><span class="i18n" data-ja="ギフト受取" data-en="received">ギフト受取</span></div><div class="gam">&#127873; x31</div></div>
+  <div class="gi"><div class="ga" style="background:linear-gradient(135deg,#2DB87A,#1a8a55)">R</div><div class="gn">Rina</div><div class="gac"><span class="i18n" data-ja="ギフト受取" data-en="received">ギフト受取</span></div><div class="gam">&#127873; x12</div></div>
+</div>
+
+<div class="sh"><div class="stt">Live Votes</div><div class="stl"><span class="i18n" data-ja="すべて見る" data-en="See all">すべて見る</span></div></div>
+<div class="vc">
+  <div class="vt"><div class="vq"><span class="i18n" data-ja="Misakiは次90切れる？" data-en="Can Misaki break 90 next?">Misakiは次90切れる？</span></div><div class="vp gd">500 pts</div></div>
+  <div class="vb"><div class="vr"><div class="vrl">Yes</div><div class="vbt"><div class="vbf y" style="width:68%"></div></div><div class="vpc">68%</div></div><div class="vr"><div class="vrl">No</div><div class="vbt"><div class="vbf n" style="width:32%"></div></div><div class="vpc">32%</div></div></div>
+  <div class="vm"><div class="vml">47 votes · <span class="i18n" data-ja="残り2日" data-en="2 days left">残り2日</span></div><div class="vmb">Vote</div></div>
+</div>
+<div class="vc">
+  <div class="vt"><div class="vq"><span class="i18n" data-ja="Yuiは今月ベスグロ更新する？" data-en="Will Yui set a new PB this month?">Yuiは今月ベスグロ更新する？</span></div><div class="vp pk">1,200 pts</div></div>
+  <div class="vb"><div class="vr"><div class="vrl">Yes</div><div class="vbt"><div class="vbf y" style="width:55%"></div></div><div class="vpc">55%</div></div><div class="vr"><div class="vrl">No</div><div class="vbt"><div class="vbf n" style="width:45%"></div></div><div class="vpc">45%</div></div></div>
+  <div class="vm"><div class="vml">89 votes · <span class="i18n" data-ja="残り5日" data-en="5 days left">残り5日</span></div><div class="vmb">Vote</div></div>
+</div>
+
+<div class="sh"><div class="stt"><span class="i18n" data-ja="フレンドのラウンド" data-en="Friends' rounds">フレンドのラウンド</span></div><div class="stl"><span class="i18n" data-ja="すべて見る" data-en="See all">すべて見る</span></div></div>
+<div class="rc"><div class="ra" style="background:linear-gradient(135deg,#E86B8A,#c74b6a)">Y</div><div class="ri"><div class="rn">Yui</div><div class="rco"><span class="i18n" data-ja="軽井沢72ゴルフ" data-en="Karuizawa 72 Golf">軽井沢72ゴルフ</span></div><div class="rtr">&#9679; Trust 100%</div></div><div class="rr"><div class="rs">84</div><div class="rd">(+12)</div><div class="rbst">BEST</div></div></div>
+<div class="rc"><div class="ra" style="background:linear-gradient(135deg,#5B9EF4,#3b7ed4)">T</div><div class="ri"><div class="rn">Taro</div><div class="rco"><span class="i18n" data-ja="東京ゴルフ倶楽部" data-en="Tokyo Golf Club">東京ゴルフ倶楽部</span></div><div class="rtr">&#9679; Trust 80%</div></div><div class="rr"><div class="rs">92</div><div class="rd">(+20)</div><div class="rp">+45 pts</div></div></div>
+<div class="rc"><div class="ra" style="background:linear-gradient(135deg,#D4A853,#b48833)">A</div><div class="ri"><div class="rn">Aiko</div><div class="rco"><span class="i18n" data-ja="武蔵カントリー" data-en="Musashi Country Club">武蔵カントリー</span></div><div class="rtr">&#9679; Trust 80%</div></div><div class="rr"><div class="rs">98</div><div class="rd">(+26)</div><div class="rp">+32 pts</div></div></div>
+</div>
+<div class="fab">&#128247;</div>
+<div class="tb">
+  <div class="tab on"><div class="ti">&#127968;</div><div class="tt">Home</div></div>
+  <div class="tab"><div class="ti">&#9971;</div><div class="tt">Rounds</div></div>
+  <div class="tab"><div class="ti">&#127873;</div><div class="tt">Gift</div></div>
+  <div class="tab"><div class="ti">&#9829;</div><div class="tt">Vote</div></div>
+  <div class="tab"><div class="ti">&#128100;</div><div class="tt">Profile</div></div>
+</div>
+</div></div>
+
+<!-- ========== VOTE ========== -->
+<div>
+<div class="phone-label">Vote</div>
+<div class="phone">
+<div class="screen">
+<div class="hdr">
+  <div class="logo">PLAY<span>LIFE</span></div>
+  <div class="hdr-icons"><div class="ic" style="width:auto;padding:0 12px;border-radius:20px;background:var(--gs);color:var(--g);border-color:transparent;font-weight:600;font-size:11px"><span class="i18n" data-ja="+ 投票を作成" data-en="+ Create vote">+ 投票を作成</span></div></div>
+</div>
+<div class="fp">
+  <div class="pill on"><span class="i18n" data-ja="トレンド" data-en="Trending">トレンド</span></div>
+  <div class="pill"><span class="i18n" data-ja="フレンド" data-en="Friends">フレンド</span></div>
+  <div class="pill"><span class="i18n" data-ja="パブリック" data-en="Public">パブリック</span></div>
+  <div class="pill"><span class="i18n" data-ja="自分の投票" data-en="My votes">自分の投票</span></div>
+</div>
+<div class="vc"><div class="vt"><div class="vq"><span class="i18n" data-ja="Misakiは次90切れる？ &#9971;" data-en="Can Misaki break 90 next? &#9971;">Misakiは次90切れる？ &#9971;</span></div><div class="vp gd">500 pts</div></div><div class="vb"><div class="vr"><div class="vrl">Yes</div><div class="vbt"><div class="vbf y" style="width:68%"></div></div><div class="vpc">68%</div></div><div class="vr"><div class="vrl">No</div><div class="vbt"><div class="vbf n" style="width:32%"></div></div><div class="vpc">32%</div></div></div><div class="vm"><div class="vml">47 votes · <span class="i18n" data-ja="残り2日" data-en="2 days left">残り2日</span></div><div class="vmb">Vote</div></div></div>
+<div class="vc"><div class="vt"><div class="vq"><span class="i18n" data-ja="HC15が太平洋クラブで80台出せる？" data-en="Can a HC15 break 80 at Taiheiyo Club?">HC15が太平洋クラブで80台出せる？</span></div><div class="vp pk">2,000 pts</div></div><div class="vb"><div class="vr"><div class="vrl">Yes</div><div class="vbt"><div class="vbf y" style="width:42%"></div></div><div class="vpc">42%</div></div><div class="vr"><div class="vrl">No</div><div class="vbt"><div class="vbf n" style="width:58%"></div></div><div class="vpc">58%</div></div></div><div class="vm"><div class="vml">256 votes · <span class="i18n" data-ja="残り5日" data-en="5 days left">残り5日</span></div><div class="vmb">Vote</div></div></div>
+<div class="vc"><div class="vt"><div class="vq"><span class="i18n" data-ja="Aikoのドライバー200y超え？ &#128170;" data-en="Can Aiko drive over 200y? &#128170;">Aikoのドライバー200y超え？ &#128170;</span></div><div class="vp gd">3,000 pts</div></div><div class="vb"><div class="vr"><div class="vrl">Yes</div><div class="vbt"><div class="vbf y" style="width:41%"></div></div><div class="vpc">41%</div></div><div class="vr"><div class="vrl">No</div><div class="vbt"><div class="vbf n" style="width:59%"></div></div><div class="vpc">59%</div></div></div><div class="vm"><div class="vml">156 votes · <span class="i18n" data-ja="残り1日" data-en="1 day left">残り1日</span></div><div class="vmb">Vote</div></div></div>
+<div class="vc"><div class="vt"><div class="vq"><span class="i18n" data-ja="今週末、東京エリア最高スコアは？" data-en="Best score in Tokyo this weekend?">今週末、東京エリア最高スコアは？</span></div><div class="vp pk">5,000 pts</div></div><div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px"><div style="font-size:10px;padding:3px 9px;border-radius:10px;background:var(--gs);color:var(--g)">Misaki 34%</div><div style="font-size:10px;padding:3px 9px;border-radius:10px;background:var(--bls);color:var(--bl)">Yui 28%</div><div style="font-size:10px;padding:3px 9px;border-radius:10px;background:var(--pks);color:var(--pk)">Taro 22%</div><div style="font-size:10px;padding:3px 9px;border-radius:10px;background:#2a2a2a;color:var(--t3)">Other 16%</div></div><div class="vm"><div class="vml">312 votes · <span class="i18n" data-ja="残り3日" data-en="3 days left">残り3日</span></div><div class="vmb">Vote</div></div></div>
+</div>
+<div class="tb">
+  <div class="tab"><div class="ti">&#127968;</div><div class="tt">Home</div></div>
+  <div class="tab"><div class="ti">&#9971;</div><div class="tt">Rounds</div></div>
+  <div class="tab"><div class="ti">&#127873;</div><div class="tt">Gift</div></div>
+  <div class="tab on"><div class="ti">&#9829;</div><div class="tt">Vote</div></div>
+  <div class="tab"><div class="ti">&#128100;</div><div class="tt">Profile</div></div>
+</div>
+</div></div>
+
+<!-- ========== GIFT ========== -->
+<div>
+<div class="phone-label">Gift</div>
+<div class="phone">
+<div class="screen">
+<div class="hdr">
+  <div class="logo">PLAY<span>LIFE</span></div>
+  <div class="hdr-icons"><div class="ic">&#127873;</div></div>
+</div>
+
+<div class="gth">
+  <div class="gtt"><span class="i18n" data-ja="受け取ったGift" data-en="Gifts received">受け取ったGift</span></div>
+  <div class="gts"><span class="i18n" data-ja="89人のサポーターから" data-en="from 89 supporters">89人のサポーターから</span></div>
+  <div class="gta">4,820 pts</div>
+  <div class="gtl"><span class="i18n" data-ja="合計ギフト収益" data-en="total gift earnings">合計ギフト収益</span></div>
+</div>
+
+<div class="sh"><div class="stt"><span class="i18n" data-ja="トップサポーター" data-en="Top supporters">トップサポーター</span></div><div class="stl"><span class="i18n" data-ja="すべて見る" data-en="See all">すべて見る</span></div></div>
+<div class="gli"><div class="glr top">1</div><div class="ra" style="width:34px;height:34px;font-size:12px;background:linear-gradient(135deg,#5B9EF4,#3b7ed4)">T</div><div class="glni"><div class="glnn">Taro</div><div class="glnf">2,340 followers</div></div><div class="gla">1,200 pts</div></div>
+<div class="gli"><div class="glr top">2</div><div class="ra" style="width:34px;height:34px;font-size:12px;background:linear-gradient(135deg,#D4A853,#b48833)">K</div><div class="glni"><div class="glnn">Ken</div><div class="glnf">890 followers</div></div><div class="gla">980 pts</div></div>
+<div class="gli"><div class="glr">3</div><div class="ra" style="width:34px;height:34px;font-size:12px;background:linear-gradient(135deg,#2DB87A,#1a8a55)">H</div><div class="glni"><div class="glnn">Hiro</div><div class="glnf">560 followers</div></div><div class="gla">720 pts</div></div>
+
+<div class="sh"><div class="stt"><span class="i18n" data-ja="人気ゴルファー" data-en="Popular golfers">人気ゴルファー</span></div><div class="stl"><span class="i18n" data-ja="すべて見る" data-en="See all">すべて見る</span></div></div>
+<div class="gli"><div class="glr top">1</div><div class="ra" style="width:34px;height:34px;font-size:12px;background:linear-gradient(135deg,#E86B8A,#c74b6a)">Y</div><div class="glni"><div class="glnn">Yui</div><div class="glnf">3,120 followers</div></div><div class="glb"><span class="i18n" data-ja="&#127873; Giftを贈る" data-en="&#127873; Send gift">&#127873; Giftを贈る</span></div></div>
+<div class="gli"><div class="glr top">2</div><div class="ra" style="width:34px;height:34px;font-size:12px;background:linear-gradient(135deg,#E86B8A,#c74b6a)">M</div><div class="glni"><div class="glnn">Misaki</div><div class="glnf">1,240 followers</div></div><div class="glb"><span class="i18n" data-ja="&#127873; Giftを贈る" data-en="&#127873; Send gift">&#127873; Giftを贈る</span></div></div>
+<div class="gli"><div class="glr">3</div><div class="ra" style="width:34px;height:34px;font-size:12px;background:linear-gradient(135deg,#D4A853,#b48833)">A</div><div class="glni"><div class="glnn">Aiko</div><div class="glnf">980 followers</div></div><div class="glb"><span class="i18n" data-ja="&#127873; Giftを贈る" data-en="&#127873; Send gift">&#127873; Giftを贈る</span></div></div>
+
+<div class="sgb">
+  <div class="sgbt"><span class="i18n" data-ja="Giftアイテムを購入" data-en="Buy gift items">Giftアイテムを購入</span></div>
+  <div class="sgbs"><span class="i18n" data-ja="お気に入りのゴルファーを応援しよう" data-en="Support your favorite golfer">お気に入りのゴルファーを応援しよう</span></div>
+  <div class="sgbg">
+    <div class="sgbi">&#127873; 50 pts</div>
+    <div class="sgbi pk">&#127873; 100 pts</div>
+    <div class="sgbi g">&#127873; 500 pts</div>
+  </div>
+</div>
+</div>
+<div class="tb">
+  <div class="tab"><div class="ti">&#127968;</div><div class="tt">Home</div></div>
+  <div class="tab"><div class="ti">&#9971;</div><div class="tt">Rounds</div></div>
+  <div class="tab on"><div class="ti">&#127873;</div><div class="tt">Gift</div></div>
+  <div class="tab"><div class="ti">&#9829;</div><div class="tt">Vote</div></div>
+  <div class="tab"><div class="ti">&#128100;</div><div class="tt">Profile</div></div>
+</div>
+</div></div>
+
+<!-- ========== PROFILE ========== -->
+<div>
+<div class="phone-label">Profile</div>
+<div class="phone">
+<div class="screen">
+<div class="hdr">
+  <div class="logo">PLAY<span>LIFE</span></div>
+  <div class="hdr-icons"><div class="ic">&#9881;</div></div>
+</div>
+
+<div class="ph">
+  <div class="pav" style="background:linear-gradient(135deg,var(--g),#1a8a55)">K</div>
+  <div class="pnm">Ken</div>
+  <div class="psb">@ken_golf · HC 18.4 · <span class="i18n" data-ja="東京ゴルフ倶楽部" data-en="Tokyo Golf Club">東京ゴルフ倶楽部</span></div>
+  <div class="pst">
+    <div class="st"><div class="sn pk">890</div><div class="sl"><span class="i18n" data-ja="フォロワー" data-en="Followers">フォロワー</span></div></div>
+    <div class="st"><div class="sn">23</div><div class="sl"><span class="i18n" data-ja="ラウンド" data-en="Rounds">ラウンド</span></div></div>
+    <div class="st"><div class="sn gd">Lv.12</div><div class="sl"><span class="i18n" data-ja="アバター" data-en="Avatar">アバター</span></div></div>
+    <div class="st"><div class="sn g">2,480</div><div class="sl"><span class="i18n" data-ja="ポイント" data-en="Points">ポイント</span></div></div>
+  </div>
+</div>
+
+<div class="trust-bar">
+  <div class="trust-top"><div class="trust-icon">&#9989;</div><div class="trust-label">Trust Level: 80%</div></div>
+  <div class="trust-track"><div class="trust-fill" style="width:80%"></div></div>
+  <div class="trust-sub">Screenshot + GPS verified</div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 16px">
+  <div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;text-align:center">
+    <div style="font-size:11px;color:var(--t3)"><span class="i18n" data-ja="ベストスコア" data-en="Best score">ベストスコア</span></div>
+    <div style="font-size:22px;font-weight:700;color:var(--t);margin-top:2px">89</div>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;text-align:center">
+    <div style="font-size:11px;color:var(--t3)"><span class="i18n" data-ja="平均スコア" data-en="Avg score">平均スコア</span></div>
+    <div style="font-size:22px;font-weight:700;color:var(--t);margin-top:2px">96.3</div>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px 8px">
+  <div style="background:var(--pks);border:1px solid rgba(232,107,138,.2);border-radius:12px;padding:12px;text-align:center">
+    <div style="font-size:11px;color:var(--pk)"><span class="i18n" data-ja="受取Gift" data-en="Gifts received">受取Gift</span></div>
+    <div style="font-size:20px;font-weight:700;color:var(--pk);margin-top:2px">1,840 pts</div>
+  </div>
+  <div style="background:var(--gds);border:1px solid rgba(212,168,83,.2);border-radius:12px;padding:12px;text-align:center">
+    <div style="font-size:11px;color:var(--gd)"><span class="i18n" data-ja="贈ったGift" data-en="Gifts sent">贈ったGift</span></div>
+    <div style="font-size:20px;font-weight:700;color:var(--gd);margin-top:2px">620 pts</div>
+  </div>
+</div>
+
+<div class="sh"><div class="stt"><span class="i18n" data-ja="実績" data-en="Achievements">実績</span></div></div>
+<div class="ach">
+  <div class="achi"><div class="achic earned">&#127941;</div><div class="achl"><span class="i18n" data-ja="初ラウンド" data-en="1st round">初ラウンド</span></div></div>
+  <div class="achi"><div class="achic earned">&#128200;</div><div class="achl">100<span class="i18n" data-ja="切り" data-en=" break">切り</span></div></div>
+  <div class="achi"><div class="achic earned">&#128293;</div><div class="achl"><span class="i18n" data-ja="5連続" data-en="5 streak">5連続</span></div></div>
+  <div class="achi"><div class="achic locked">&#128142;</div><div class="achl">90<span class="i18n" data-ja="切り" data-en=" break">切り</span></div></div>
+  <div class="achi"><div class="achic locked">&#127775;</div><div class="achl"><span class="i18n" data-ja="10連続" data-en="10 streak">10連続</span></div></div>
+</div>
+
+<div class="sh"><div class="stt"><span class="i18n" data-ja="最近のラウンド" data-en="Recent rounds">最近のラウンド</span></div></div>
+<div class="rc"><div class="ra" style="background:linear-gradient(135deg,var(--g),#1a8a55)">K</div><div class="ri"><div class="rn"><span class="i18n" data-ja="東京ゴルフ倶楽部" data-en="Tokyo Golf Club">東京ゴルフ倶楽部</span></div><div class="rco"><span class="i18n" data-ja="2日前" data-en="2 days ago">2日前</span></div><div class="rtr">&#9679; Trust 80% · +45 pts</div></div><div class="rr"><div class="rs">92</div><div class="rd">(+20)</div></div></div>
+<div class="rc"><div class="ra" style="background:linear-gradient(135deg,var(--g),#1a8a55)">K</div><div class="ri"><div class="rn"><span class="i18n" data-ja="武蔵カントリー" data-en="Musashi Country">武蔵カントリー</span></div><div class="rco"><span class="i18n" data-ja="2週間前" data-en="2 weeks ago">2週間前</span></div><div class="rtr">&#9679; Trust 100% · +52 pts</div></div><div class="rr"><div class="rs">89</div><div class="rd">(+17)</div><div class="rbst">BEST</div></div></div>
+</div>
+<div class="tb">
+  <div class="tab"><div class="ti">&#127968;</div><div class="tt">Home</div></div>
+  <div class="tab"><div class="ti">&#9971;</div><div class="tt">Rounds</div></div>
+  <div class="tab"><div class="ti">&#127873;</div><div class="tt">Gift</div></div>
+  <div class="tab"><div class="ti">&#9829;</div><div class="tt">Vote</div></div>
+  <div class="tab on"><div class="ti">&#128100;</div><div class="tt">Profile</div></div>
+</div>
+</div></div>
+
+<script>
+function setLang(lang) {
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent.trim() === lang.toUpperCase()));
+  document.querySelectorAll('.i18n').forEach(el => {
+    const text = el.getAttribute('data-' + lang);
+    if (text) el.innerHTML = text;
+  });
+}
+</script>
+</body>
+</html>
